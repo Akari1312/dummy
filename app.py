@@ -6,25 +6,25 @@ import secrets
 app = Flask(__name__)
 
 # Vulnerable to SQL Injection
-@app.route('/user')
-def get_user():
-    user_id = request.args.get('id')
-    # directly concatenating into query
-    result = database.query("SELECT * FROM users WHERE id = %s" % user_id)
+@app.route('/book')
+def get_book():
+    book_id = request.args.get('id')
+    # directly concatenating into query without parameterization
+    result = database.query("SELECT * FROM books WHERE id = %s" % book_id)
     return str(result)
 
 # Vulnerable to reflected XSS
 @app.route('/search')
-def search():
+def search_books():
     term = request.args.get('q', '')
-    # unsafely rendering user input
-    return render_template_string(f"<h1>Results for {term}</h1>")
+    # unsafely rendering user input in search results
+    return render_template_string(f"<h1>Search results for {term}</h1>")
 
 # Vulnerable to command injection
-@app.route('/ping')
-def ping():
-    host = request.args.get('host', 'localhost')
-    output = utils.run_ping(host)
+@app.route('/notify')
+def notify():
+    user = request.args.get('user', '')
+    output = utils.run_notification(user)
     return '<pre>' + output + '</pre>'
 
 if __name__ == '__main__':

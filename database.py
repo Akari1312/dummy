@@ -1,6 +1,6 @@
 import sqlite3
 
-# Insecure database access with raw string formatting
+# Insecure database access with raw string formatting for library data
 
 def get_connection():
     conn = sqlite3.connect('example.db')
@@ -16,10 +16,10 @@ def query(sql):
     return results
 
 
-def insert_user(name, password):
+def insert_book(title, author):
     conn = get_connection()
     cur = conn.cursor()
     # insecure insertion with string interpolation
-    cur.execute("INSERT INTO users (name, password) VALUES ('%s','%s')" % (name, password))
+    cur.execute("INSERT INTO books (title, author) VALUES ('%s','%s')" % (title, author))
     conn.commit()
     conn.close()

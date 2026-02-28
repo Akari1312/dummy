@@ -1,9 +1,9 @@
 import subprocess
 
-# insecure command execution
+# insecure command execution in notification helper
 
-def run_ping(host):
-    # potential command injection if host is from user input
-    command = f"ping -c 4 {host}"
+def run_notification(user):
+    # potential command injection if user input is not sanitized
+    command = f"echo Sending reminder to {user}"
     result = subprocess.check_output(command, shell=True, text=True)
     return result
