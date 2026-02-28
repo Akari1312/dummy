@@ -21,6 +21,8 @@ The application allows visitors to look up book records, perform text searches, 
 - `utils.py` - utility functions demonstrating command injection
 - `secrets.py` - hardcoded credentials
 
+Insecure frontend files have been added under the `frontend/` directory. These include an HTML page and JavaScript that call the backend APIs and contain client‑side vulnerabilities (reflected XSS, unsafe `eval`, insecure localStorage usage).
+
 Use this repository responsibly for testing and learning; never deploy it publicly.
 
 Use this repository to experiment with static analysis, penetration testing, or educational exercises.

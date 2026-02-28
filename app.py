@@ -1,9 +1,19 @@
-from flask import Flask, request, render_template_string
+from flask import Flask, request, render_template_string, send_from_directory
 import database
 import utils
 import secrets
+import os
 
 app = Flask(__name__)
+
+# serve static frontend files
+@app.route('/')
+def index():
+    return send_from_directory('frontend','index.html')
+
+@app.route('/<path:filename>')
+def frontend_static(filename):
+    return send_from_directory('frontend', filename)
 
 # Vulnerable to SQL Injection
 @app.route('/book')

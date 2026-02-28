@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Insecure Frontend</title>
+    <script src="app.js"></script>
+</head>
+<body>
+    <h1>Welcome to the Vulnerable App</h1>
+
+    <!-- Reflected XSS via URL parameter -->
+    <div id="greeting"></div>
+
+    <h2>Lookup User</h2>
+    <form id="userForm">
+        <label for="userId">User ID:</label>
+        <input type="text" id="userId" name="userId">
+        <button type="submit">Get User</button>
+    </form>
+    <pre id="userResult"></pre>
+
+    <h2>Ping Host</h2>
+    <form id="pingForm">
+        <label for="host">Host:</label>
+        <input type="text" id="host" name="host">
+        <button type="submit">Ping</button>
+    </form>
+    <pre id="pingResult"></pre>
+
+    <script>
+        // DOM-dependent XSS: writes query param directly
+        const params = new URLSearchParams(window.location.search);
+        const name = params.get('name');
+        if (name) {
+            document.getElementById('greeting').innerHTML = 'Hello ' + name; // unsafe
+        }
+
+        document.getElementById('userForm').onsubmit = function(e) {
+            e.preventDefault();
+            const id = document.getElementById('userId').value;
+            fetch('/user?id=' + encodeURIComponent(id))
+                .then(res => res.text())
+                .then(text => { document.getElementById('userResult').textContent = text; });
+        };
+
+        document.getElementById('pingForm').onsubmit = function(e) {
+            e.preventDefault();
+            const host = document.getElementById('host').value;
+            fetch('/ping?host=' + encodeURIComponent(host))
+                .then(res => res.text())
+                .then(text => { document.getElementById('pingResult').textContent = text; });
+        };
+
+        // insecure storage of API key
+        localStorage.setItem('apiKey', 'FAKE_FRONTEND_KEY');
+    </script>
+</body>
+</html>
